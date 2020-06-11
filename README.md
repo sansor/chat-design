@@ -42,6 +42,77 @@ It is the other major part of the chat architecture, the one that users directly
 - **Chat Device Storage** 
   - It is an internal database which stores messages and files so that users can access them offline. Its internal component, **Chat Cache Reader**, gets media files from the Chat Media Storage and stores them on the device so that the user can access them anytime without having to reach the Chat Media Storage every time.
 
+## Chat Server Engine Design
+
+### Authentication of User
+
+![](authenticate_user.jpg)
 
 
 
+```
+var payload = {
+  name: '#{customerName}',
+  email: '#{customerEmail}',
+  phone : '#phone_number',
+  iat: #{timestamp},
+  sercet_password: '#{sercet_password}'
+};
+```
+
+Secret Password could be anything which can be used to authenticate user. 
+
+Name, Email and Phone could be optional based on the way you want to authenticate the user. 
+
+The API will return a unique **secret JWT token** which will be used to verify the user. 
+
+
+
+### One to One Chat
+
+![Chat Connection Architecture](chat_connect.jpg)
+
+
+
+```
+connection_detail {
+ string connection_string;
+ string user_token;
+}
+```
+
+Depending on the server availabilty, chat client can connect to any given server.
+
+ 
+
+![](one_to_one_chat.jpg)
+
+- **InBoundMessageHandler**
+  - It handles all the incoming messages from client and push it to the message queue. 
+- **InbboundMessagePublisher**
+  - In consumes messages from the queue , push it to redis and also inform the subsribers to update the client. 
+- **OutBoundMessageSubscriber**
+  - Listen to all the published message events and put the message back into the message queue. 
+- **OutBoundMessagehandler**
+  - Publish the message back to the client.
+- **Session Service**
+  - Stores all the current connected users and server details.
+
+## Questions and Answer
+
+1. **How would you design one-on-one conversations between users?**
+
+   - As shown in the above diagram.
+
+2. How would you extend your design to support group chats? 
+
+   -  We can have a service Group Chat Service which will give us the list of user associated with the group. 
+   - 
+
+   
+
+   
+
+   
+
+    
