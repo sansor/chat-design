@@ -14,5 +14,5 @@ The standard chat application has two major parts :
 - Chat Server Engine - Server which relay message from one client to other client(s).
 - Client App - Application which runs on client device (mobile, desktop etc)
 
-
+![Chat Architecture](chat_arh.jpg)
 
